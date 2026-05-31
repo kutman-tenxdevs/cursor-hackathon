@@ -3,36 +3,40 @@ const { useState, useEffect, useRef } = React;
 
 function PointsReadout({ value, onClick }) {
   return <button className="points-btn" onClick={onClick}>
-    <span className="points">{value.toLocaleString()}<small>pts</small></span>
+    <span className="points">{value.toLocaleString("ru-RU")}<small>очк.</small></span>
   </button>;
 }
 
 const NAV = [
-  { group: null,     items: [{ key: "home", label: "Home", icon: IconHome }] },
-  { group: "Play",   items: [{ key: "vsai", label: "vs AI", icon: IconBot }, { key: "duel", label: "Duel", icon: IconSwords }] },
-  { group: "Browse", items: [{ key: "catalog", label: "Catalog", icon: IconLayers }, { key: "leaderboard", label: "Leaderboard", icon: IconTrophy }] },
+  { group: null,     items: [{ key: "home", label: "Главная", icon: IconHome }] },
+  { group: "Игра",   items: [{ key: "vsai", label: "Против ИИ", icon: IconBot }, { key: "duel", label: "Дуэль", icon: IconSwords }] },
+  { group: "Обзор",  items: [{ key: "catalog", label: "Каталог", icon: IconLayers }, { key: "leaderboard", label: "Рейтинг", icon: IconTrophy }] },
 ];
 const TABS = [
-  { key: "home", label: "Home", icon: IconHome },
-  { key: "catalog", label: "Catalog", icon: IconLayers },
-  { key: "leaderboard", label: "Top", icon: IconTrophy },
-  { key: "profile", label: "Profile", icon: IconUser },
+  { key: "home", label: "Главная", icon: IconHome },
+  { key: "catalog", label: "Каталог", icon: IconLayers },
+  { key: "leaderboard", label: "Топ", icon: IconTrophy },
+  { key: "profile", label: "Профиль", icon: IconUser },
 ];
 
 function App() {
   const [screen, setScreen] = useState("home");
   const [points, setPoints] = useState(ME.points);
   const [theme, setTheme] = useState(() => localStorage.getItem("canyou-theme") || "dark");
-  const [device, setDevice] = useState(() => localStorage.getItem("canyou-device") || (window.innerWidth < 900 ? "mobile" : "desktop"));
+  const [device, setDevice] = useState(() => (window.innerWidth < 900 ? "mobile" : "desktop"));
   const [toastNode, showToast] = useToast();
   const me = { ...ME, points };
 
   useEffect(() => { document.documentElement.setAttribute("data-theme", theme); localStorage.setItem("canyou-theme", theme); }, [theme]);
-  useEffect(() => { localStorage.setItem("canyou-device", device); }, [device]);
+  useEffect(() => {
+    function onResize() { setDevice(window.innerWidth < 900 ? "mobile" : "desktop"); }
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
   const mainRef = useRef(null);
   function go(s) { setScreen(s); if (mainRef.current) mainRef.current.scrollTop = 0; }
 
-  function onEarn(p) { setPoints((v) => v + p); showToast(`+${p} points`, <IconBolt size={15} style={{ color: "var(--accent-text)" }} />); }
+  function onEarn(p) { setPoints((v) => v + p); showToast(`+${p} очков`, <IconBolt size={15} style={{ color: "var(--accent-text)" }} />); }
 
   const isFlow = screen === "vsai" || screen === "duel";
 
@@ -45,7 +49,7 @@ function App() {
     {screen === "profile" && <ProfileScreen me={me} device={device} />}
   </>;
 
-  const themeToggle = <button className="pv-theme" onClick={() => setTheme(theme === "dark" ? "light" : "dark")} title="Toggle theme">
+  const themeToggle = <button className="pv-theme" onClick={() => setTheme(theme === "dark" ? "light" : "dark")} title="Сменить тему">
     {theme === "dark" ? <IconSun size={16} /> : <IconMoon size={16} />}
   </button>;
 
@@ -107,14 +111,6 @@ function App() {
     </div>
 
     {toastNode}
-
-    {/* preview-only meta control */}
-    <div className="preview-bar">
-      <div className="seg">
-        <button className={device === "desktop" ? "on" : ""} onClick={() => setDevice("desktop")}><IconMonitor size={14} />Desktop</button>
-        <button className={device === "mobile" ? "on" : ""} onClick={() => setDevice("mobile")}><IconPhone size={13} />Mobile</button>
-      </div>
-    </div>
   </>;
 }
 

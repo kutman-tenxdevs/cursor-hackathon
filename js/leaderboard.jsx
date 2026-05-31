@@ -1,19 +1,18 @@
 /* CanYou? — Leaderboard / Top + Profile (minimal) */
 function LeaderboardScreen({ me, device }) {
   const { useState } = React;
-  const [scope, setScope] = useState("Global");
+  const [scope, setScope] = useState("Мир");
   const top3 = LEADERS.slice(0, 3);
   const rest = LEADERS.slice(3);
 
   return <div className="screen fade"><div className="pad">
-    <div className="eyebrow mb8">Season 4 · ends in 12 days</div>
-    <h1 className="display">Top players</h1>
+    <div className="eyebrow mb8">Сезон 4 · осталось 12 дней</div>
+    <h1 className="display">Лучшие игроки</h1>
 
     <div className="seg-line mt16">
-      {["Global", "Friends", "Gold tier"].map((s) => <button key={s} className={"seg-line-btn" + (scope === s ? " on" : "")} onClick={() => setScope(s)}>{s}</button>)}
+      {["Мир", "Друзья", "Ранг Золото"].map((s) => <button key={s} className={"seg-line-btn" + (scope === s ? " on" : "")} onClick={() => setScope(s)}>{s}</button>)}
     </div>
 
-    {/* podium */}
     <div className="row mt24" style={{ alignItems: "flex-end", justifyContent: "center", gap: 10, maxWidth: 460, marginInline: "auto" }}>
       {[top3[1], top3[0], top3[2]].map((p) => {
         const first = p.rank === 1; const h = first ? 88 : p.rank === 2 ? 66 : 52;
@@ -37,11 +36,11 @@ function LeaderRow({ p }) {
     <span className="mono" style={{ width: 22, textAlign: "center", fontSize: 13.5, fontWeight: 600, color: p.me ? "var(--accent-text)" : "var(--text-3)" }}>{p.rank}</span>
     <Avatar initials={p.initials} size={34} color={p.color} ring={p.me} />
     <div className="grow">
-      <div className="h3" style={{ fontWeight: 600 }}>{p.name}{p.me && <span className="tag tag-accent" style={{ height: 16, marginLeft: 7, fontSize: 9.5, padding: "0 6px" }}>YOU</span>}</div>
+      <div className="h3" style={{ fontWeight: 600 }}>{p.name}{p.me && <span className="tag tag-accent" style={{ height: 16, marginLeft: 7, fontSize: 9.5, padding: "0 6px" }}>ТЫ</span>}</div>
       <div className="small mono">{p.handle}</div>
     </div>
     <div className="col" style={{ alignItems: "flex-end", gap: 2 }}>
-      <span className="mono" style={{ fontSize: 13.5, fontWeight: 600 }}>{p.pts.toLocaleString()}</span>
+      <span className="mono" style={{ fontSize: 13.5, fontWeight: 600 }}>{p.pts.toLocaleString("ru-RU")}</span>
       {p.delta !== 0
         ? <span className="mono" style={{ fontSize: 10.5, color: p.delta > 0 ? "var(--easy)" : "var(--hard)", display: "flex", alignItems: "center", gap: 2 }}><IconArrowUp size={10} sw={2.4} style={{ transform: p.delta < 0 ? "rotate(180deg)" : "none" }} />{Math.abs(p.delta)}</span>
         : <span className="mono" style={{ fontSize: 10.5, color: "var(--text-4)" }}>—</span>}
@@ -54,8 +53,8 @@ function ProfileScreen({ me, device }) {
   const prog = Math.round(((me.points - cur.min) / (nxt.min - cur.min)) * 100);
   const toNext = nxt.min - me.points;
 
-  const badges = [["First blood", IconBolt, true], ["Streak x5", IconFlame, true], ["Duelist", IconSwords, true], ["Sharpshooter", IconTarget, true], ["Top 10", IconCrown, false], ["Marathoner", IconStar, false]];
-  const activity = [["Beat AI on Hard", 180, IconBot], ["Won duel vs Yui T.", 220, IconSwords], ["Completed: Sketch coffee", 70, IconLayers]];
+  const badges = [["Первая кровь", IconBolt, true], ["Серия ×5", IconFlame, true], ["Дуэлянт", IconSwords, true], ["Меткий", IconTarget, true], ["Топ-10", IconCrown, false], ["Марафонец", IconStar, false]];
+  const activity = [["Победа над ИИ (Сложный)", 180, IconBot], ["Дуэль с Yui T. — победа", 220, IconSwords], ["Выполнено: Набросок кофе", 70, IconLayers]];
 
   return <div className="screen fade"><div className="pad">
     <div className="col center tac mt8" style={{ gap: 10 }}>
@@ -63,27 +62,26 @@ function ProfileScreen({ me, device }) {
       <div><div className="h1">{me.name}</div><div className="small mono">{me.handle}</div></div>
       <div className="row g8" style={{ gap: 8 }}>
         <span className="tag"><IconMedal size={12} />{me.rank}</span>
-        <span className="tag"><IconFlame size={12} />6-day streak</span>
+        <span className="tag"><IconFlame size={12} />серия 6 дней</span>
       </div>
     </div>
 
-    {/* tier progress */}
     <div className="card card-pad mt20">
       <div className="row between mb12">
         <div className="row g8" style={{ gap: 8 }}><span className="h3">{cur.name}</span><IconChevR size={13} style={{ color: "var(--text-4)" }} /><span className="h3" style={{ color: "var(--text-3)" }}>{nxt.name}</span></div>
         <span className="mono small">{prog}%</span>
       </div>
       <Progress value={prog} />
-      <div className="row between mt12"><span className="small mono">{me.points.toLocaleString()} pts</span><span className="small">{toNext.toLocaleString()} to {nxt.name}</span></div>
+      <div className="row between mt12"><span className="small mono">{me.points.toLocaleString("ru-RU")} очк.</span><span className="small">{toNext.toLocaleString("ru-RU")} до {nxt.name}</span></div>
     </div>
 
     <div className="row g12 mt16" style={{ gap: 12 }}>
-      {[["Wins", "47"], ["Win rate", "68%"], ["Best streak", "14"]].map(([l, v]) => <div key={l} className="card card-pad grow tac" style={{ display: "flex", justifyContent: "center" }}><Stat label={l} value={v} /></div>)}
+      {[["Побед", "47"], ["Винрейт", "68%"], ["Лучшая серия", "14"]].map(([l, v]) => <div key={l} className="card card-pad grow tac" style={{ display: "flex", justifyContent: "center" }}><Stat label={l} value={v} /></div>)}
     </div>
 
     <div className="desk-row mt24">
       <div>
-        <div className="section-head"><span className="eyebrow">Recent activity</span></div>
+        <div className="section-head"><span className="eyebrow">Недавняя активность</span></div>
         <div className="col g8" style={{ gap: 8 }}>
           {activity.map(([t, p, I], i) => <div key={i} className="card" style={{ padding: "11px 13px", display: "flex", alignItems: "center", gap: 11 }}>
             <div style={{ width: 32, height: 32, borderRadius: 9, background: "var(--surface-2)", border: "1px solid var(--border)", display: "grid", placeItems: "center", color: "var(--text-2)" }}><I size={16} /></div>
@@ -92,7 +90,7 @@ function ProfileScreen({ me, device }) {
         </div>
       </div>
       <div>
-        <div className="section-head"><span className="eyebrow">Badges</span><span className="small mono">9 / 24</span></div>
+        <div className="section-head"><span className="eyebrow">Значки</span><span className="small mono">9 / 24</span></div>
         <div className="row wrap g10" style={{ gap: 10 }}>
           {badges.map(([n, I, earned]) => <div key={n} className="col center g6" style={{ gap: 6, width: "calc(33.33% - 7px)" }}>
             <div style={{ width: 54, height: 54, borderRadius: 14, display: "grid", placeItems: "center", background: "var(--surface)", border: "1px solid " + (earned ? "var(--border-strong)" : "var(--border-faint)"), color: earned ? "var(--text)" : "var(--text-4)", opacity: earned ? 1 : 0.55, position: "relative" }}>

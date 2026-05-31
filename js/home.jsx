@@ -1,31 +1,29 @@
 /* CanYou? — Home / mode selector (minimal) */
 function HomeScreen({ go, me, device }) {
   const modes = [
-    { key: "vsai", title: "vs AI", icon: IconBot, tag: "Solo", desc: "Beat the machine across three timed tasks." },
-    { key: "duel", title: "Duel", icon: IconSwords, tag: "1v1", desc: "Challenge a friend or a random rival." },
-    { key: "catalog", title: "Catalog", icon: IconLayers, tag: "Open", desc: "Take on challenges from the community." },
+    { key: "vsai", title: "Против ИИ", icon: IconBot, tag: "Соло", desc: "Три задания на время — обыграй машину." },
+    { key: "duel", title: "Дуэль", icon: IconSwords, tag: "1 на 1", desc: "Вызови друга или случайного соперника." },
+    { key: "catalog", title: "Каталог", icon: IconLayers, tag: "Открыто", desc: "Челленджи от сообщества." },
   ];
 
   return <div className="screen fade min-fill">
     <div className="pad">
-      <div className="eyebrow mb8">Tuesday · 6-day streak</div>
-      <h1 className="display">Can you handle today?</h1>
+      <div className="eyebrow mb8">Вторник · серия 6 дней</div>
+      <h1 className="display">Справишься сегодня?</h1>
 
-      {/* daily drop */}
       <div className="card card-tap card-pad mt20" onClick={() => go("catalog")}>
         <div className="row between mb12">
-          <span className="tag tag-accent">Daily drop</span>
-          <span className="mono small">resets 14:22</span>
+          <span className="tag tag-accent">Челлендж дня</span>
+          <span className="mono small">сброс 14:22</span>
         </div>
-        <div className="h2">No-phone afternoon — 3 hours</div>
+        <div className="h2">Без телефона днём — 3 часа</div>
         <div className="row between mt16">
-          <div className="meta"><IconUsers size={14} /><span className="mono">3,320</span> in<span className="dot" /><span className="mono">80</span> pts</div>
-          <span className="link">Accept <IconChevR size={14} /></span>
+          <div className="meta"><IconUsers size={14} /><span className="mono">3 320</span> в игре<span className="dot" /><span className="mono">80</span> очк.</div>
+          <span className="link">Принять <IconChevR size={14} /></span>
         </div>
       </div>
 
-      {/* modes */}
-      <div className="section-head mt32"><span className="eyebrow">Choose a mode</span></div>
+      <div className="section-head mt32"><span className="eyebrow">Выбери режим</span></div>
       <div className="grid-modes">
         {modes.map((m) => { const I = m.icon;
           return <button key={m.key} className="card card-tap" onClick={() => go(m.key)}
@@ -41,12 +39,11 @@ function HomeScreen({ go, me, device }) {
           </button>; })}
       </div>
 
-      {/* rank progress */}
       <div className="card card-tap card-pad mt24" onClick={() => go("profile")}>
         <div className="row between mb12">
           <div className="row g10" style={{ gap: 10 }}>
             <Avatar initials={me.initials} size={32} color={me.color} />
-            <div><div className="h3" style={{ fontWeight: 600 }}>{me.rank}</div><div className="small">1,180 pts to Platinum</div></div>
+            <div><div className="h3" style={{ fontWeight: 600 }}>{me.rank}</div><div className="small">1 180 очк. до Платины</div></div>
           </div>
           <span className="mono small">71%</span>
         </div>
